@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
+use App\Models\Inventory;
 use App\Models\User;
 
-class ProductPolicy
+class InventoryPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -18,8 +18,9 @@ class ProductPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Product $product): bool
+    public function view(User $user, Inventory $inventory): bool
     {
+
         return true;
     }
 
@@ -34,7 +35,7 @@ class ProductPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product): bool
+    public function update(User $user, Inventory $inventory): bool
     {
         return true;
     }
@@ -42,7 +43,7 @@ class ProductPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Product $product): bool
+    public function delete(User $user, Inventory $inventory): bool
     {
         return true;
     }

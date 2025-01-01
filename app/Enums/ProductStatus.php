@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Enums;
 
-enum CategoryStatus: string
+enum ProductStatus: string
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';

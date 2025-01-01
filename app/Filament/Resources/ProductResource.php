@@ -3,17 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Filament\Tables\Columns\StatusColumn;
 use App\Models\Category;
 use App\Models\Product;
-use App\ProductStatus;
+use App\Enums\ProductStatus;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
@@ -29,10 +28,10 @@ class ProductResource extends Resource
                     ->options(Category::all()->pluck('name', 'id'))
                     ->searchable()
                     ->preload()
+                    ->required()
                     ->relationship('category', 'name'),
-                Forms\Components\TextInput::make('name'),
+                Forms\Components\TextInput::make('name')->required()->unique(ignoreRecord:true),
                 Forms\Components\Select::make('status')->options(ProductStatus::class)->required(),
-                Forms\Components\TextInput::make('price'),
                 Forms\Components\TextInput::make('image_url'),
                 Forms\Components\TextInput::make('description'),
             ]);
@@ -42,24 +41,26 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id'),
+                TextColumn::make('category.name')->badge(),
+                Tables\Columns\TextColumn::make('name'),
+                StatusColumn::make('status'),
+                Tables\Columns\TextColumn::make('image_url')->copyable(),
+                Tables\Columns\TextColumn::make('description')->copyable(),
             ])
             ->filters([
                 //
                 Tables\Filters\SelectFilter::make('category')
-                ->options([
-                    'cat' => 'Cat',
-                    'dog' => 'Dog',
-                    'rabbit' => 'Rabbit',
-                ]),
+                    ->options(Category::all()->pluck('name', 'id')
+                    ),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make(),
+                    ]),
             ]);
     }
 

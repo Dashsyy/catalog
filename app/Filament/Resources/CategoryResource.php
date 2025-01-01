@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\CategoryStatus;
+use App\Enums\CategoryStatus;
 use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Filament\Tables\Columns\StatusColumn;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,8 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
@@ -25,7 +23,7 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required()->unique(),
+                Forms\Components\TextInput::make('name')->required()->unique(ignoreRecord:true),
                 Forms\Components\Select::make('status')->options(CategoryStatus::class)->required(),
                 Forms\Components\TextInput::make('image_url')->url(),
                 Forms\Components\TextArea::make('description'),
@@ -38,12 +36,12 @@ class CategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('status'),
+                StatusColumn::make('status'),
                 Tables\Columns\TextColumn::make('image_url')->copyable(),
                 Tables\Columns\TextColumn::make('description')->copyable(),
             ])
             ->filters([
-                SelectFilter::make('status')->options(CategoryStatus::class)
+                SelectFilter::make('status')->options(CategoryStatus::class),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
