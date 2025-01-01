@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Category;
 use App\Models\Product;
+use App\ProductStatus;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,9 +25,13 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('category_id'),
+                Forms\Components\Select::make('category_id')
+                    ->options(Category::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->relationship('category', 'name'),
                 Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('status'),
+                Forms\Components\Select::make('status')->options(ProductStatus::class)->required(),
                 Forms\Components\TextInput::make('price'),
                 Forms\Components\TextInput::make('image_url'),
                 Forms\Components\TextInput::make('description'),

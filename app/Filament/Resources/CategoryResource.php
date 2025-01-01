@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\CategoryStatus;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
@@ -9,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,9 +26,9 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')->required()->unique(),
-                Forms\Components\TextInput::make('status')->required(),
-                Forms\Components\TextInput::make('image_url'),
-                Forms\Components\TextInput::make('description'),
+                Forms\Components\Select::make('status')->options(CategoryStatus::class)->required(),
+                Forms\Components\TextInput::make('image_url')->url(),
+                Forms\Components\TextArea::make('description'),
             ]);
     }
 
@@ -41,7 +43,7 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('description')->copyable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')->options(CategoryStatus::class)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
