@@ -3,9 +3,9 @@
 namespace App\Filament\Tables\Columns;
 
 use App\Enums\StatusEnum;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 
-class StatusColumn extends BadgeColumn
+class StatusColumn extends TextColumn
 {
     protected array $statusColors = [
         'active' => 'success',
